@@ -1,98 +1,95 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Button } from "@/components/Button";
+import { GridBackground } from "@/components/GridBackground";
+import { ToolTile } from "@/components/ToolTile";
+import { icons } from "@/constants/icons";
+import "@/global.css";
+import { router } from "expo-router";
+import React from "react";
+import { ScrollView, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { StatCard } from "../../components/StatCard";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Home() {
+  const insets = useSafeAreaInsets();
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <View className="flex-1 bg-surface" style={{ flex: 1 }}>
+      <GridBackground />
+      <SafeAreaView className="flex-1" style={{ flex: 1 }} edges={["top"]}>
+        <ScrollView
+          className="flex-1"
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingHorizontal: 24,
+            paddingTop: 24,
+            paddingBottom: insets.bottom + 100,
+          }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View className="mb-10">
+            <Text className="text-label-md text-primary tracking-[2px]">
+              We Already tracking You !
+            </Text>
+            <Text className="text-display-lg text-on-surface mt-3 leading-[60px]">
+              Alaa
+              {"\n"}
+              <Text className="text-primary glow-primary">Trackoo.</Text>
+            </Text>
+          </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+          {/* Stats Bar */}
+          <View className="flex-row mb-8">
+            <StatCard label="Total Dist" value="128.4" unit="km" />
+            <StatCard label="Avg Speed" value="42.5" unit="km/h" />
+          </View>
+
+          {/* Quick Tools */}
+          <View className="mb-8">
+            <Text className="text-label-md text-on-surface-variant mb-4">
+              Quick Control
+            </Text>
+            <View className="flex-row justify-between">
+              <ToolTile
+                icon={icons.activity}
+                label="History"
+                onPress={() => router.push("/activity")}
+              />
+              <ToolTile
+                icon={icons.wallet}
+                label="Assets"
+                onPress={() => router.push("/wallet")}
+              />
+              <ToolTile
+                icon={icons.setting}
+                label="Config"
+                onPress={() => router.push("/settings")}
+              />
+            </View>
+          </View>
+
+          {/* Action Card */}
+          <View className="bg-surface-container-high rounded-[32px] p-8 overflow-hidden border border-outline-variant">
+            <View className="absolute -top-5 -right-5 w-[100px] h-[100px] rounded-full bg-primary opacity-10" />
+            <Text className="text-headline-sm text-on-surface mb-2">
+              Ready to Roll?
+            </Text>
+            <Text className="text-body-md text-on-surface-variant mb-6">
+              Start your tracking session and let Trackoo handle the rest.
+            </Text>
+
+            <Button
+              label="Start Session"
+              onPress={() => router.push("/session")}
+            />
+
+            <View className="absolute -bottom-5 -left-5 w-[100px] h-[100px] rounded-full bg-primary opacity-10 backdrop-blur-3xl will-change-transform" />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

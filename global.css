@@ -1,0 +1,66 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  /* Neon Cartographer — Surface foundation */
+  --color-surface: #10141a;
+  --color-surface-dim: #0a0e14;
+  --color-surface-container-lowest: #0a0e14;
+  --color-surface-container-low: #181c22;
+  --color-surface-container: #1d2127;
+  --color-surface-container-high: #262a31;
+  --color-surface-container-highest: #31353c;
+  --color-surface-variant: #31353c;
+  --color-surface-tint: #4ce346;
+
+  /* Signal (primary) */
+  --color-primary: #55ea4d;
+  --color-primary-container: #32cd32;
+  --color-primary-fixed: #75ff68;
+  --color-on-primary: #003a03;
+
+  /* Warning (tertiary) */
+  --color-tertiary: #ffbcc7;
+  --color-tertiary-container: #ff92a8;
+
+  /* Content */
+  --color-on-surface: #dfe2eb;
+  --color-on-surface-variant: #a8afbd;
+  --color-outline-variant: #3d4a39;
+
+  /* Radii */
+  --radius-xl: 0.75rem;
+}
+
+@utility text-display-lg {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+@utility text-headline-sm {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+@utility text-body-md {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+@utility text-label-md {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+@utility glow-primary {
+  /* shadow-color: theme(--color-surface-tint); */
+  shadow-opacity: 0.45;
+  shadow-radius: 16px;
+  elevation: 8;
+}

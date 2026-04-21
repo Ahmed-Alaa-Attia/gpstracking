@@ -1,53 +1,70 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+export const colors = {
+  // Surface foundation
+  surface: "#10141a",
+  surfaceDim: "#0a0e14",
+  surfaceContainerLowest: "#0a0e14",
+  surfaceContainerLow: "#181c22",
+  surfaceContainer: "#1d2127",
+  surfaceContainerHigh: "#262a31",
+  surfaceContainerHighest: "#31353c",
+  surfaceVariant: "#31353c",
+  surfaceTint: "#4ce346",
 
-import { Platform } from 'react-native';
+  // Signal (primary)
+  primary: "#55ea4d",
+  primaryContainer: "#32cd32",
+  primaryFixed: "#75ff68",
+  onPrimary: "#003a03",
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+  // Warning (tertiary)
+  tertiary: "#ffbcc7",
+  tertiaryContainer: "#ff92a8",
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
-};
+  // Content
+  onSurface: "#dfe2eb",
+  onSurfaceVariant: "#a8afbd",
+  outlineVariant: "#3d4a39",
+} as const;
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+export const radii = {
+  sm: 6,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  pill: 999,
+} as const;
+
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  "2xl": 32,
+  "3xl": 48,
+} as const;
+
+export const typography = {
+  displayLg: { fontSize: 56, fontWeight: "700" as const, letterSpacing: -1 },
+  headlineSm: { fontSize: 24, fontWeight: "600" as const },
+  bodyMd: { fontSize: 14, fontWeight: "400" as const },
+  labelMd: {
+    fontSize: 12,
+    fontWeight: "500" as const,
+    letterSpacing: 0.8,
+    textTransform: "uppercase" as const,
   },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+} as const;
+
+export const glow = {
+  primary: {
+    shadowColor: colors.surfaceTint,
+    shadowOpacity: 0.45,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 8,
   },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-});
+} as const;
+
+export const theme = { colors, radii, spacing, typography, glow };
+export type Theme = typeof theme;
