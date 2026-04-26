@@ -25,10 +25,11 @@ export function haversineMeters(a: LatLng, b: LatLng): number {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-export const ACCURACY_MAX_M = 500; // Increased to allow indoor/weak GPS points
-export const MIN_STEP_M = 0; // Removed distance filter so all small steps count
-export const MAX_SPEED_MPS = 100;
+export const ACCURACY_MAX_M = 20;       // outdoor fixes typically 5-15m; reject worse
+export const MIN_STEP_M = 3;            // walking at 1.4m/s + 2s cadence ≈ 2.8m; 3m rejects small jitter
+export const MAX_SPEED_MPS = 30;        // ~108 km/h; filters GPS-jitter velocity spikes
 export const MIN_DT_MS = 0;
+export const JITTER_ACCURACY_FACTOR = 0.5; // movement must exceed half the accuracy ring
 
 export function acceptPoint(prev: TrackPoint | null, next: TrackPoint): boolean {
   if (next.accuracy != null && next.accuracy > ACCURACY_MAX_M) return false;
@@ -36,9 +37,13 @@ export function acceptPoint(prev: TrackPoint | null, next: TrackPoint): boolean 
   const dt = next.t - prev.t;
   if (dt < MIN_DT_MS) return false;
   const d = haversineMeters(prev, next);
-  if (d < MIN_STEP_M) return false;
-  const mps = d / (dt / 1000);
-  if (mps > MAX_SPEED_MPS) return false;
+  const uncertainty = Math.max(prev.accuracy ?? 0, next.accuracy ?? 0);
+  // Movement must exceed MIN_STEP_M AND a fraction of the GPS uncertainty.
+  if (d < Math.max(MIN_STEP_M, uncertainty * JITTER_ACCURACY_FACTOR)) return false;
+  if (dt > 100) {
+    const mps = d / (dt / 1000);
+    if (mps > MAX_SPEED_MPS) return false;
+  }
   return true;
 }
 
@@ -59,12 +64,15 @@ export function computeStats(points: TrackPoint[], durationSec: number): Session
     const prev = points[i - 1];
     const curr = points[i];
     if (curr.segment !== prev.segment) continue;
-    distance += haversineMeters(prev, curr);
-    const s = curr.speed ?? 0;
-    if (s > maxSpeed && s <= MAX_SPEED_MPS) maxSpeed = s;
+    const segDist = haversineMeters(prev, curr);
+    distance += segDist;
+    // Max speed uses only GPS doppler speed (trustworthy); derived-from-distance
+    // is discarded because indoor jitter produces huge fake velocities.
+    const s = curr.speed;
+    if (s != null && s >= 0 && s <= MAX_SPEED_MPS && s > maxSpeed) maxSpeed = s;
   }
   const avg = durationSec > 0 ? distance / durationSec : 0;
-  const pace = distance >= 50 ? durationSec / (distance / 1000) : null;
+  const pace = distance > 0 && durationSec > 0 ? durationSec / (distance / 1000) : null;
   return {
     distanceMeters: distance,
     avgSpeedMps: avg,

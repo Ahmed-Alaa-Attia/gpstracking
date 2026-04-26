@@ -1,15 +1,21 @@
-import { useEffect } from 'react';
-import { Stack } from "expo-router";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { readPending, clearPending } from '@/lib/pendingSession';
-import { saveSession } from '@/lib/sessions';
+import { AnimatedSplash } from '@/components/AnimatedSplash';
+import { clearPending, readPending } from '@/lib/pendingSession';
 import '@/lib/locationTask';
+import { saveSession } from '@/lib/sessions';
+import { Stack } from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback, useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '../global.css';
 
 export default function RootLayout() {
+  const [splashDone, setSplashDone] = useState(false);
+
   useEffect(() => {
+    // Hide the native splash immediately — our AnimatedSplash overlay takes over from here
+    SplashScreen.hideAsync().catch(() => {});
     (async () => {
       const pending = await readPending();
       if (!pending) return;
@@ -22,8 +28,12 @@ export default function RootLayout() {
     })();
   }, []);
 
+  const handleSplashComplete = useCallback(() => {
+    setSplashDone(true);
+  }, []);
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#10141a' }}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
           <Stack
@@ -36,6 +46,9 @@ export default function RootLayout() {
             <Stack.Screen name="session" options={{ presentation: 'card' }} />
             <Stack.Screen name="session/[id]" options={{ presentation: 'card' }} />
           </Stack>
+          {!splashDone && (
+            <AnimatedSplash onAnimationComplete={handleSplashComplete} />
+          )}
         </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

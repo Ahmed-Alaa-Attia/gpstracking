@@ -1,7 +1,7 @@
 import * as Location from 'expo-location';
 import { Pedometer } from 'expo-sensors';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { acceptPoint, computeStats, type TrackPoint } from '@/lib/geo';
+import { acceptPoint, computeStats, haversineMeters, type TrackPoint } from '@/lib/geo';
 import {
   startBackgroundLocation,
   stopBackgroundLocation,
@@ -59,14 +59,17 @@ export function useLocationTracker() {
       if (!startedAtRef.current || pausedRef.current) return;
       const accepted: TrackPoint[] = [];
       for (const loc of locs) {
+        const rawSpeed = loc.coords.speed;
+        const speed = rawSpeed != null && rawSpeed >= 0 ? rawSpeed : null;
+        const rawHeading = loc.coords.heading;
         const next: TrackPoint = {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,
-          t: loc.timestamp - startedAtRef.current,
-          speed: loc.coords.speed ?? null,
+          t: Date.now() - startedAtRef.current,
+          speed,
           accuracy: loc.coords.accuracy ?? null,
           segment: segmentRef.current,
-          heading: loc.coords.heading ?? null,
+          heading: rawHeading != null && rawHeading >= 0 ? rawHeading : null,
         };
         if (!acceptPoint(lastPointRef.current, next)) continue;
         lastPointRef.current = next;
@@ -100,7 +103,7 @@ export function useLocationTracker() {
       setSteps(0);
       pedSubRef.current = Pedometer.watchStepCount((res) => {
         if (pausedRef.current) return;
-        if (pedBaselineRef.current == null) pedBaselineRef.current = res.steps - 1;
+        if (pedBaselineRef.current == null) pedBaselineRef.current = res.steps;
         const sinceResume = Math.max(0, res.steps - (pedBaselineRef.current ?? 0));
         setSteps(pedAccumBeforeResumeRef.current + sinceResume);
       });
@@ -122,21 +125,33 @@ export function useLocationTracker() {
     setPoints([]);
     setElapsedSec(0);
 
-    try {
-      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-      setInitialPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-    } catch {}
+    // Start timer and UI immediately — don't block on GPS fix
+    setStatus('tracking');
+    startTick();
 
+    // Fetch initial position in background (don't block)
+    Location.getLastKnownPositionAsync({ maxAge: 60_000 })
+      .then((pos) => {
+        if (pos) setInitialPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      })
+      .catch(() => {});
+    Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
+      .then((pos) => setInitialPos({ lat: pos.coords.latitude, lng: pos.coords.longitude }))
+      .catch(() => {});
+
+    // Start location streaming
     await startBackgroundLocation();
+
+    // Heading
     try {
       headingSubRef.current = await Location.watchHeadingAsync((h) => {
         const v = h.trueHeading >= 0 ? h.trueHeading : h.magHeading;
         if (v != null && v >= 0) setHeading(v);
       });
     } catch {}
+
+    // Pedometer
     await startPedometer();
-    setStatus('tracking');
-    startTick();
   }, [requestPermission, startTick, startPedometer]);
 
   const pause = useCallback(() => {
@@ -186,9 +201,16 @@ export function useLocationTracker() {
   }, []);
 
   const stats = useMemo(() => computeStats(points, elapsedSec), [points, elapsedSec]);
+
   const currentSpeed = useMemo(() => {
-    const last = points[points.length - 1];
-    return last?.speed ?? 0;
+    if (points.length < 2) return 0;
+    const curr = points[points.length - 1];
+    if (curr.speed != null && curr.speed > 0) return curr.speed;
+    const prev = points[points.length - 2];
+    if (curr.segment !== prev.segment) return 0;
+    const dt = (curr.t - prev.t) / 1000;
+    if (dt <= 0) return 0;
+    return haversineMeters(prev, curr) / dt;
   }, [points]);
 
   return {

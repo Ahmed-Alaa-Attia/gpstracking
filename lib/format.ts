@@ -15,7 +15,8 @@ export function formatDuration(seconds: number): string {
 }
 
 export function formatSpeed(mps: number): string {
-  return `${(mps * 3.6).toFixed(1)} km/h`;
+  const clamped = Math.max(0, mps);
+  return `${(clamped * 3.6).toFixed(1)} km/h`;
 }
 
 export function formatPace(secPerKm: number | null): string {

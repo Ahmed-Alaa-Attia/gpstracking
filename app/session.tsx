@@ -19,7 +19,8 @@ export default function SessionScreen() {
     if (t.status === 'idle') {
       t.start();
     }
-  }, [t.status, t]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t.status]);
 
   useEffect(() => {
     const unsub = nav.addListener('beforeRemove', (e) => {
@@ -33,7 +34,8 @@ export default function SessionScreen() {
       }
     });
     return unsub;
-  }, [nav, t]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nav, t.status]);
 
   const handleStop = useCallback(async () => {
     t.stop();

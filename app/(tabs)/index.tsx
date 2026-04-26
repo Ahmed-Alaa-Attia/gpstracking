@@ -32,7 +32,7 @@ export default function Home() {
           {/* Header */}
           <View className="mb-10">
             <Text className="text-label-md text-primary tracking-[2px]">
-              We Already tracking You !
+              We are Already tracking You !
             </Text>
             <Text className="text-display-lg text-on-surface mt-3 leading-[60px]">
               Alaa

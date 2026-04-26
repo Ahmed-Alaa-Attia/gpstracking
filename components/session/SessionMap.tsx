@@ -1,9 +1,14 @@
-import React, { useMemo, useRef, useEffect } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
-import MapView, { Polyline, Marker, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
-import type { TrackPoint } from '@/lib/geo';
-import { colors } from '@/constants/theme';
-import { darkMapStyle } from './darkMapStyle';
+import { colors } from "@/constants/theme";
+import type { TrackPoint } from "@/lib/geo";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import MapView, {
+  Marker,
+  Polyline,
+  PROVIDER_GOOGLE,
+  type Region,
+} from "react-native-maps";
+import { darkMapStyle } from "./darkMapStyle";
 
 interface Props {
   points: TrackPoint[];
@@ -30,7 +35,13 @@ function splitSegments(points: TrackPoint[]): TrackPoint[][] {
   return segments;
 }
 
-export function SessionMap({ points, follow, heading, initialRegion, onUserPan }: Props) {
+export function SessionMap({
+  points,
+  follow,
+  heading,
+  initialRegion,
+  onUserPan,
+}: Props) {
   const mapRef = useRef<MapView | null>(null);
   const didFitRef = useRef(false);
   const segments = useMemo(() => splitSegments(points), [points]);
@@ -44,15 +55,19 @@ export function SessionMap({ points, follow, heading, initialRegion, onUserPan }
       altitude: 1500,
       pitch: 0,
     };
-    const h = heading != null && heading >= 0
-      ? heading
-      : last.heading != null && last.heading >= 0 ? last.heading : null;
+    const h =
+      heading != null && heading >= 0
+        ? heading
+        : last.heading != null && last.heading >= 0
+          ? last.heading
+          : null;
     if (h != null) cameraParams.heading = h;
     mapRef.current.animateCamera(cameraParams, { duration: 500 });
   }, [follow, points, heading]);
 
   useEffect(() => {
-    if (follow || didFitRef.current || points.length < 2 || !mapRef.current) return;
+    if (follow || didFitRef.current || points.length < 2 || !mapRef.current)
+      return;
     const coords = points.map((p) => ({ latitude: p.lat, longitude: p.lng }));
     mapRef.current.fitToCoordinates(coords, {
       edgePadding: { top: 60, right: 40, bottom: 60, left: 40 },
@@ -66,8 +81,8 @@ export function SessionMap({ points, follow, heading, initialRegion, onUserPan }
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFill}
-        provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
-        customMapStyle={Platform.OS === 'android' ? darkMapStyle : undefined}
+        provider={Platform.OS === "android" ? PROVIDER_GOOGLE : undefined}
+        customMapStyle={Platform.OS === "android" ? darkMapStyle : undefined}
         initialRegion={initialRegion}
         showsUserLocation
         showsMyLocationButton={false}
@@ -75,15 +90,22 @@ export function SessionMap({ points, follow, heading, initialRegion, onUserPan }
         onPanDrag={onUserPan}
       >
         {segments.map((seg, idx) => {
-          const coords = seg.map((p) => ({ latitude: p.lat, longitude: p.lng }));
+          const coords = seg.map((p) => ({
+            latitude: p.lat,
+            longitude: p.lng,
+          }));
           return (
             <React.Fragment key={idx}>
               <Polyline
                 coordinates={coords}
-                strokeColor={colors.primary + '55'}
+                strokeColor={colors.primary + "55"}
                 strokeWidth={12}
               />
-              <Polyline coordinates={coords} strokeColor={colors.primary} strokeWidth={5} />
+              <Polyline
+                coordinates={coords}
+                strokeColor={colors.primary}
+                strokeWidth={5}
+              />
             </React.Fragment>
           );
         })}
@@ -96,7 +118,10 @@ export function SessionMap({ points, follow, heading, initialRegion, onUserPan }
         )}
         {points.length > 1 && !follow && (
           <Marker
-            coordinate={{ latitude: points[points.length - 1].lat, longitude: points[points.length - 1].lng }}
+            coordinate={{
+              latitude: points[points.length - 1].lat,
+              longitude: points[points.length - 1].lng,
+            }}
             title="End"
             pinColor="red"
           />
