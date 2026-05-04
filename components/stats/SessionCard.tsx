@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { memo, useCallback } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { fontFamily } from '@/constants/fonts';
 import { colors } from '@/constants/theme';
 import { formatDistance, formatDuration, formatPace, formatSpeed } from '@/lib/format';
 import type { SessionDoc, SessionType } from '@/lib/sessions';
@@ -79,7 +80,10 @@ export const SessionCard = memo(function SessionCard({
             padding: 16,
           }}
         >
-          <Text className="text-on-surface text-3xl font-extrabold tracking-tight mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+          <Text
+            className="text-on-surface text-3xl font-extrabold tracking-tight mb-1"
+            style={{ fontFamily: fontFamily.bold }}
+          >
             {getSessionName(session.startedAt, session.type).toUpperCase()}
           </Text>
           <Text className="text-on-surface-variant text-[14px] font-semibold">

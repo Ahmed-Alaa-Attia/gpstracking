@@ -4,6 +4,39 @@
 
 @import "nativewind/theme";
 
+
+/* Space Grotesk (bundled in assets/Fonts) — used on web; native loads via expo-font in app/_layout */
+@font-face {
+  font-family: "SpaceGrotesk-Light";
+  src: url("./assets/Fonts/SpaceGrotesk-Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SpaceGrotesk-Regular";
+  src: url("./assets/Fonts/SpaceGrotesk-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SpaceGrotesk-Medium";
+  src: url("./assets/Fonts/SpaceGrotesk-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SpaceGrotesk-SemiBold";
+  src: url("./assets/Fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SpaceGrotesk-Bold";
+  src: url("./assets/Fonts/SpaceGrotesk-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @theme {
   /* Velocity Peak — Surface foundation (Neutral Deep Black) */
   --color-surface: #1a1a1a;
@@ -56,31 +89,34 @@
 
   /* Radii */
   --radius-xl: 0.75rem;
+
+  /* Default UI font (Space Grotesk from assets/Fonts) */
+  --font-sans: "SpaceGrotesk-Regular", ui-sans-serif, system-ui, sans-serif;
 }
 
 @utility text-display-lg {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "SpaceGrotesk-Bold", sans-serif;
   font-size: 64px;
-  font-weight: 700;
+  font-weight: normal;
   letter-spacing: -0.04em;
 }
 
 @utility text-headline-sm {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "SpaceGrotesk-SemiBold", sans-serif;
   font-size: 24px;
-  font-weight: 600;
+  font-weight: normal;
 }
 
 @utility text-body-md {
-  font-family: "Lexend", sans-serif;
+  font-family: "SpaceGrotesk-Regular", sans-serif;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: normal;
 }
 
 @utility text-label-md {
-  font-family: "Lexend", sans-serif;
+  font-family: "SpaceGrotesk-SemiBold", sans-serif;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: normal;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
