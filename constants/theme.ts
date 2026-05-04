@@ -1,3 +1,5 @@
+import { fontFamily } from "./fonts";
+
 export const colors = {
   // Surface foundation
   surface: "#1a1a1a",
@@ -68,13 +70,26 @@ export const spacing = {
 } as const;
 
 export const typography = {
-  displayLg: { fontFamily: "Space Grotesk", fontSize: 64, fontWeight: "700" as const, letterSpacing: -0.04 },
-  headlineSm: { fontFamily: "Space Grotesk", fontSize: 24, fontWeight: "600" as const },
-  bodyMd: { fontFamily: "Lexend", fontSize: 16, fontWeight: "400" as const },
+  displayLg: {
+    fontFamily: fontFamily.bold,
+    fontSize: 64,
+    fontWeight: "normal" as const,
+    letterSpacing: -0.04,
+  },
+  headlineSm: {
+    fontFamily: fontFamily.semibold,
+    fontSize: 24,
+    fontWeight: "normal" as const,
+  },
+  bodyMd: {
+    fontFamily: fontFamily.regular,
+    fontSize: 16,
+    fontWeight: "normal" as const,
+  },
   labelMd: {
-    fontFamily: "Lexend",
+    fontFamily: fontFamily.semibold,
     fontSize: 12,
-    fontWeight: "600" as const,
+    fontWeight: "normal" as const,
     letterSpacing: 0.1,
     textTransform: "uppercase" as const,
   },
