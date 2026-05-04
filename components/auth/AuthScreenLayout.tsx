@@ -41,7 +41,7 @@ export function AuthScreenLayout({ children }: Props) {
         >
           <Text
             className="text-center font-bold uppercase tracking-[0.28em] text-primary"
-            style={{ fontFamily: fontFamily.bold, fontSize: 22, letterSpacing: 4 }}
+            style={{ fontFamily: fontFamily.bold, fontSize: 26, letterSpacing: 4 }}
           >
             TRACKOOO
           </Text>
