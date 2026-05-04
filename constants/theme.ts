@@ -1,29 +1,52 @@
 export const colors = {
   // Surface foundation
-  surface: "#10141a",
-  surfaceDim: "#0a0e14",
-  surfaceContainerLowest: "#0a0e14",
-  surfaceContainerLow: "#181c22",
-  surfaceContainer: "#1d2127",
-  surfaceContainerHigh: "#262a31",
-  surfaceContainerHighest: "#31353c",
-  surfaceVariant: "#31353c",
-  surfaceTint: "#4ce346",
+  surface: "#1a1a1a",
+  surfaceDim: "#0d0d0d",
+  surfaceBright: "#2a2a2a",
+  surfaceContainerLowest: "#000000",
+  surfaceContainerLow: "#141414",
+  surfaceContainer: "#1a1a1a",
+  surfaceContainerHigh: "#2a2a2a",
+  surfaceContainerHighest: "#333333",
+  surfaceVariant: "#2a2a2a",
+  surfaceTint: "#b9f600",
 
-  // Signal (primary)
-  primary: "#55ea4d",
-  primaryContainer: "#32cd32",
-  primaryFixed: "#75ff68",
-  onPrimary: "#003a03",
+  background: "#0d0d0d",
+  onBackground: "#ffffff",
 
-  // Warning (tertiary)
-  tertiary: "#ffbcc7",
-  tertiaryContainer: "#ff92a8",
+  // Primary
+  primary: "#b9f600",
+  onPrimary: "#263500",
+  primaryContainer: "#b9f600",
+  onPrimaryContainer: "#516e00",
+  inversePrimary: "#4c6700",
+  primaryFixed: "#b9f600",
+
+  // Secondary
+  secondary: "#c6c6c7",
+  onSecondary: "#2f3131",
+  secondaryContainer: "#454747",
+  onSecondaryContainer: "#b4b5b5",
+
+  // Tertiary
+  tertiary: "#ffffff",
+  onTertiary: "#243240",
+  tertiaryContainer: "#d5e4f7",
+  onTertiaryContainer: "#576676",
 
   // Content
-  onSurface: "#dfe2eb",
-  onSurfaceVariant: "#a8afbd",
-  outlineVariant: "#3d4a39",
+  onSurface: "#ffffff",
+  onSurfaceVariant: "#a3a3a3",
+  outline: "#444444",
+  outlineVariant: "#2a2a2a",
+  inverseSurface: "#ffffff",
+  inverseOnSurface: "#0d0d0d",
+
+  // Error
+  error: "#ffb4ab",
+  onError: "#690005",
+  errorContainer: "#93000a",
+  onErrorContainer: "#ffdad6",
 } as const;
 
 export const radii = {
@@ -45,13 +68,14 @@ export const spacing = {
 } as const;
 
 export const typography = {
-  displayLg: { fontSize: 56, fontWeight: "700" as const, letterSpacing: -1 },
-  headlineSm: { fontSize: 24, fontWeight: "600" as const },
-  bodyMd: { fontSize: 14, fontWeight: "400" as const },
+  displayLg: { fontFamily: "Space Grotesk", fontSize: 64, fontWeight: "700" as const, letterSpacing: -0.04 },
+  headlineSm: { fontFamily: "Space Grotesk", fontSize: 24, fontWeight: "600" as const },
+  bodyMd: { fontFamily: "Lexend", fontSize: 16, fontWeight: "400" as const },
   labelMd: {
+    fontFamily: "Lexend",
     fontSize: 12,
-    fontWeight: "500" as const,
-    letterSpacing: 0.8,
+    fontWeight: "600" as const,
+    letterSpacing: 0.1,
     textTransform: "uppercase" as const,
   },
 } as const;

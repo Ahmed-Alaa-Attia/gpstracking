@@ -1,6 +1,6 @@
+import Constants, { AppOwnership } from 'expo-constants';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import Constants, { AppOwnership } from 'expo-constants';
 
 export const LOCATION_TASK = 'trackotest-location-task';
 
@@ -16,7 +16,7 @@ export function subscribeLocations(fn: Listener): () => void {
 
 function emit(locs: Location.LocationObject[]) {
   listeners.forEach((fn) => {
-    try { fn(locs); } catch {}
+    try { fn(locs); } catch { }
   });
 }
 
@@ -86,5 +86,5 @@ export async function stopBackgroundLocation() {
   try {
     const started = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK);
     if (started) await Location.stopLocationUpdatesAsync(LOCATION_TASK);
-  } catch {}
+  } catch { }
 }

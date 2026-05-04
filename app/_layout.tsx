@@ -1,14 +1,14 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { AnimatedSplash } from '@/components/AnimatedSplash';
-import { clearPending, readPending } from '@/lib/pendingSession';
-import '@/lib/locationTask';
-import { saveSession } from '@/lib/sessions';
+import { AnimatedSplash } from "@/components/AnimatedSplash";
+import "@/lib/locationTask";
+import { clearPending, readPending } from "@/lib/pendingSession";
+import { saveSession } from "@/lib/sessions";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
-import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import '../global.css';
+import * as SplashScreen from "expo-splash-screen";
+import { useCallback, useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import "../global.css";
 
 export default function RootLayout() {
   const [splashDone, setSplashDone] = useState(false);
@@ -33,7 +33,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#10141a' }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#10141a" }}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
           <Stack
@@ -42,9 +42,13 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: "#10141a" },
             }}
           >
+            <Stack.Screen name="(auth)" /> {/* Add this line */}
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="session" options={{ presentation: 'card' }} />
-            <Stack.Screen name="session/[id]" options={{ presentation: 'card' }} />
+            <Stack.Screen name="session" options={{ presentation: "card" }} />
+            <Stack.Screen
+              name="session/[id]"
+              options={{ presentation: "card" }}
+            />
           </Stack>
           {!splashDone && (
             <AnimatedSplash onAnimationComplete={handleSplashComplete} />
