@@ -1,3 +1,4 @@
+import { fontFamily } from "@/constants/fonts";
 import { colors } from "@/constants/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
@@ -71,8 +72,9 @@ export default function TabLayout() {
           elevation: 0,
         },
         tabBarLabelStyle: {
+          fontFamily: fontFamily.semibold,
           fontSize: 10,
-          fontWeight: "600",
+          fontWeight: "normal",
           letterSpacing: 0.8,
           textTransform: "uppercase",
         },
