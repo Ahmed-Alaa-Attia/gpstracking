@@ -1,6 +1,6 @@
-import * as Haptics from 'expo-haptics';
-import React, { useCallback, useEffect } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import * as Haptics from "expo-haptics";
+import React, { useCallback, useEffect } from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   runOnJS,
@@ -12,8 +12,8 @@ import Animated, {
   withSpring,
   withTiming,
   type SharedValue,
-} from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
+} from "react-native-reanimated";
+import Svg, { Path } from "react-native-svg";
 
 interface AnimatedSplashProps {
   onAnimationComplete?: () => void;
@@ -22,12 +22,12 @@ interface AnimatedSplashProps {
 }
 
 const LOGO_SIZE = 140;
-const WORDMARK = 'TRACKOO';
+const WORDMARK = "TRACKOO";
 
 export function AnimatedSplash({
   onAnimationComplete,
-  backgroundColor = '#10141a',
-  primaryColor = '#55ea4d',
+  backgroundColor = "#10141a",
+  primaryColor = "#55ea4d",
 }: AnimatedSplashProps) {
   const reduceMotion = useReducedMotion();
   const { width, height } = useWindowDimensions();
@@ -92,9 +92,18 @@ export function AnimatedSplash({
     statusOpacity.value = withDelay(150, withTiming(1, { duration: 300 }));
 
     // Phase 2: Radar pulses cascade (300-1500ms)
-    pulse1.value = withDelay(300, withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }));
-    pulse2.value = withDelay(500, withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }));
-    pulse3.value = withDelay(700, withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }));
+    pulse1.value = withDelay(
+      300,
+      withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }),
+    );
+    pulse2.value = withDelay(
+      500,
+      withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }),
+    );
+    pulse3.value = withDelay(
+      700,
+      withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }),
+    );
 
     // Phase 3: Logo lock-on (650-1100ms)
     logoOpacity.value = withDelay(650, withTiming(1, { duration: 350 }));
@@ -120,10 +129,7 @@ export function AnimatedSplash({
         easing: Easing.out(Easing.cubic),
       }),
     );
-    subtitleOpacity.value = withDelay(
-      1500,
-      withTiming(1, { duration: 400 }),
-    );
+    subtitleOpacity.value = withDelay(1500, withTiming(1, { duration: 400 }));
     lockedOpacity.value = withDelay(
       1400,
       withTiming(1, { duration: 300 }, (f) => {
@@ -193,10 +199,7 @@ export function AnimatedSplash({
           />
         </View>
 
-        <Wordmark
-          progress={letterProgress}
-          color={primaryColor}
-        />
+        <Wordmark progress={letterProgress} color={primaryColor} />
 
         <Subtitle opacity={subtitleOpacity} />
       </View>
@@ -236,7 +239,7 @@ function Grid({
           delay={i * 0.12}
           color={color}
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: 0,
             right: 0,
             top: ((i + 1) * height) / (lines + 1),
@@ -252,7 +255,7 @@ function Grid({
           delay={0.4 + i * 0.1}
           color={color}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             bottom: 0,
             left: ((i + 1) * width) / (lines + 1),
@@ -276,18 +279,21 @@ function GridLine({
   delay: number;
   color: string;
   style: object;
-  axis: 'x' | 'y';
+  axis: "x" | "y";
 }) {
   const animatedStyle = useAnimatedStyle(() => {
-    const local = Math.max(0, Math.min(1, (progress.value - delay) / (1 - delay)));
+    const local = Math.max(
+      0,
+      Math.min(1, (progress.value - delay) / (1 - delay)),
+    );
     return {
       opacity: local * 0.18,
-      transform: axis === 'x'
-        ? [{ scaleX: local }]
-        : [{ scaleY: local }],
+      transform: axis === "x" ? [{ scaleX: local }] : [{ scaleY: local }],
     };
   });
-  return <Animated.View style={[style, { backgroundColor: color }, animatedStyle]} />;
+  return (
+    <Animated.View style={[style, { backgroundColor: color }, animatedStyle]} />
+  );
 }
 
 function Pulse({
@@ -307,7 +313,7 @@ function Pulse({
     <Animated.View
       style={[
         {
-          position: 'absolute',
+          position: "absolute",
           width: maxSize,
           height: maxSize,
           borderRadius: maxSize / 2,
@@ -349,9 +355,24 @@ function Logo({
         style,
       ]}
     >
-      <Svg width={LOGO_SIZE} height={LOGO_SIZE} viewBox="0 0 200 200" fill="none">
-        <Path d="M 40 60 L 160 60" stroke={color} strokeWidth={18} strokeLinecap="round" />
-        <Path d="M 100 60 L 100 150" stroke={color} strokeWidth={18} strokeLinecap="round" />
+      <Svg
+        width={LOGO_SIZE}
+        height={LOGO_SIZE}
+        viewBox="0 0 200 200"
+        fill="none"
+      >
+        <Path
+          d="M 40 60 L 160 60"
+          stroke={color}
+          strokeWidth={18}
+          strokeLinecap="round"
+        />
+        <Path
+          d="M 100 60 L 100 150"
+          stroke={color}
+          strokeWidth={18}
+          strokeLinecap="round"
+        />
       </Svg>
     </Animated.View>
   );
@@ -366,8 +387,14 @@ function Wordmark({
 }) {
   return (
     <View style={styles.wordmarkRow}>
-      {WORDMARK.split('').map((char, i) => (
-        <Letter key={i} char={char} index={i} progress={progress} color={color} />
+      {WORDMARK.split("").map((char, i) => (
+        <Letter
+          key={i}
+          char={char}
+          index={i}
+          progress={progress}
+          color={color}
+        />
       ))}
     </View>
   );
@@ -419,13 +446,21 @@ function StatusBar({
   const scanningStyle = useAnimatedStyle(() => ({
     opacity: opacity.value * (1 - lockedOpacity.value),
   }));
-  const lockedStyle = useAnimatedStyle(() => ({ opacity: lockedOpacity.value }));
+  const lockedStyle = useAnimatedStyle(() => ({
+    opacity: lockedOpacity.value,
+  }));
   return (
     <View style={styles.statusBar}>
       <Animated.Text style={[styles.statusText, scanningStyle]}>
         ◦ ACQUIRING SIGNAL
       </Animated.Text>
-      <Animated.Text style={[styles.statusText, { color, position: 'absolute' }, lockedStyle]}>
+      <Animated.Text
+        style={[
+          styles.statusText,
+          { color, position: "absolute" },
+          lockedStyle,
+        ]}
+      >
         ● SIGNAL LOCKED
       </Animated.Text>
     </View>
@@ -433,42 +468,42 @@ function StatusBar({
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
   stage: {
     width: LOGO_SIZE * 1.5,
     height: LOGO_SIZE * 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  logo: { alignItems: 'center', justifyContent: 'center' },
+  logo: { alignItems: "center", justifyContent: "center" },
   wordmarkRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 36,
   },
   letter: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: "800",
     letterSpacing: 6,
     marginHorizontal: 1,
   },
   subtitle: {
-    color: 'rgba(255,255,255,0.45)',
+    color: "rgba(255,255,255,0.45)",
     fontSize: 11,
     letterSpacing: 4,
     marginTop: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   statusBar: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statusText: {
-    color: 'rgba(255,255,255,0.55)',
+    color: "rgba(255,255,255,0.55)",
     fontSize: 10,
     letterSpacing: 3,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 });
