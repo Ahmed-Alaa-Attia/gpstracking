@@ -91,7 +91,7 @@ export function AnimatedSplash({
     });
     statusOpacity.value = withDelay(150, withTiming(1, { duration: 300 }));
 
-    // Phase 2: Radar pulses cascade (300-1500ms)
+    // Phase  2: Radar pulses cascade (300-1500ms)
     pulse1.value = withDelay(
       300,
       withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }),
