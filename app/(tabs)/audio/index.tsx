@@ -1,10 +1,6 @@
 import { FeedHeader } from "@/components/ui/FeedHeader";
 import { colors } from "@/constants/theme";
-import {
-  fetchHotPosts,
-  getPlayableUrlFromEid,
-  type OpenWhydPost,
-} from "@/lib/openwhyd";
+import { searchTracks, type DeezerTrack } from "@/lib/deezer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -19,16 +15,15 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function TrackRow({ item }: { item: OpenWhydPost }) {
-  const playable = getPlayableUrlFromEid(item.eId) != null;
-
+function TrackRow({ item }: { item: DeezerTrack }) {
+  const playable = Boolean(item.preview);
   return (
     <Pressable
-      onPress={() => router.push(`/audio/${item._id}`)}
+      onPress={() => router.push(`/audio/${item.id}`)}
       className="flex-row items-center gap-3 rounded-2xl bg-surface-container-low border border-surface-container-high px-3 py-3 active:opacity-85"
     >
       <Image
-        source={{ uri: item.img || undefined }}
+        source={{ uri: item.album?.cover_medium || item.album?.cover || undefined }}
         contentFit="cover"
         style={{ width: 56, height: 56, borderRadius: 12 }}
       />
@@ -37,10 +32,10 @@ function TrackRow({ item }: { item: OpenWhydPost }) {
           className="text-on-surface text-[15px] font-semibold tracking-[0.2px]"
           numberOfLines={1}
         >
-          {item.name || "Untitled"}
+          {item.title || "Untitled"}
         </Text>
         <Text className="text-on-surface-variant text-[12px] font-semibold" numberOfLines={1}>
-          {item.uNm ? `by ${item.uNm}` : "Openwhyd"}
+          {item.artist?.name ? `by ${item.artist.name}` : "Deezer"}
         </Text>
       </View>
       <View className="items-center justify-center">
@@ -56,31 +51,33 @@ function TrackRow({ item }: { item: OpenWhydPost }) {
 
 export default function AudioListScreen() {
   const insets = useSafeAreaInsets();
-  const [items, setItems] = useState<OpenWhydPost[]>([]);
+  const [items, setItems] = useState<DeezerTrack[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const query = "amr diab";
 
   const load = useCallback(async (isManual = false) => {
     isManual ? setRefreshing(true) : setLoading(true);
     setError(null);
     try {
-      const data = await fetchHotPosts({ limit: 25, genre: "electro" });
+      const data = await searchTracks(query, 25);
       setItems(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load tracks");
     } finally {
       isManual ? setRefreshing(false) : setLoading(false);
     }
-  }, []);
+  }, [query]);
 
   useEffect(() => {
     load(false);
   }, [load]);
 
-  const keyExtractor = useCallback((p: OpenWhydPost) => p._id, []);
+  const keyExtractor = useCallback((t: DeezerTrack) => String(t.id), []);
   const renderItem = useCallback(
-    ({ item }: { item: OpenWhydPost }) => <TrackRow item={item} />,
+    ({ item }: { item: DeezerTrack }) => <TrackRow item={item} />,
     []
   );
 
@@ -90,9 +87,12 @@ export default function AudioListScreen() {
         <Text className="text-on-surface text-3xl font-extrabold tracking-[0.5px] mt-6 mb-3">
           TRAINING TRACKS
         </Text>
+        <Text className="text-on-surface-variant text-[12px] font-semibold tracking-[0.12em] uppercase mb-4">
+          Deezer search — {query}
+        </Text>
       </View>
     ),
-    []
+    [query]
   );
 
   return (

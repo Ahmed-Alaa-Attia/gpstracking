@@ -1,10 +1,6 @@
 import { FeedHeader } from "@/components/ui/FeedHeader";
 import { colors } from "@/constants/theme";
-import {
-  fetchPostById,
-  getPlayableUrlFromEid,
-  type OpenWhydPost,
-} from "@/lib/openwhyd";
+import { fetchTrack, type DeezerTrack } from "@/lib/deezer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { Image } from "expo-image";
@@ -29,9 +25,9 @@ function formatTime(seconds: number): string {
 export default function AudioPlayerScreen() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const postId = typeof id === "string" ? id : "";
+  const trackId = typeof id === "string" ? Number(id) : NaN;
 
-  const [post, setPost] = useState<OpenWhydPost | null>(null);
+  const [track, setTrack] = useState<DeezerTrack | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,8 +37,9 @@ export default function AudioPlayerScreen() {
       setLoading(true);
       setError(null);
       try {
-        const p = await fetchPostById(postId);
-        if (alive) setPost(p);
+        if (!Number.isFinite(trackId)) throw new Error("Invalid track id");
+        const t = await fetchTrack(trackId);
+        if (alive) setTrack(t);
       } catch (e) {
         if (alive) setError(e instanceof Error ? e.message : "Failed to load track");
       } finally {
@@ -52,12 +49,9 @@ export default function AudioPlayerScreen() {
     return () => {
       alive = false;
     };
-  }, [postId]);
+  }, [trackId]);
 
-  const audioUrl = useMemo(
-    () => getPlayableUrlFromEid(post?.eId) ?? null,
-    [post?.eId]
-  );
+  const audioUrl = useMemo(() => track?.preview ?? null, [track?.preview]);
 
   const player = useAudioPlayer(audioUrl, { updateInterval: 250, downloadFirst: false });
   const status = useAudioPlayerStatus(player);
@@ -95,7 +89,7 @@ export default function AudioPlayerScreen() {
     );
   }
 
-  if (!post || error) {
+  if (!track || error) {
     return (
       <View className="flex-1 bg-surface">
         <View style={{ paddingTop: insets.top }} className="bg-background">
@@ -130,17 +124,24 @@ export default function AudioPlayerScreen() {
       <View className="flex-1 px-4 pt-6">
         <View className="rounded-3xl overflow-hidden border border-surface-container-high bg-surface-container-low">
           <Image
-            source={{ uri: post.img || undefined }}
+            source={{
+              uri:
+                track.album?.cover_xl ||
+                track.album?.cover_big ||
+                track.album?.cover_medium ||
+                track.album?.cover ||
+                undefined,
+            }}
             contentFit="cover"
             style={{ width: "100%", height: 280 }}
           />
         </View>
 
         <Text className="text-on-surface text-3xl font-extrabold tracking-[0.5px] mt-6" numberOfLines={2}>
-          {post.name || "Untitled"}
+          {track.title || "Untitled"}
         </Text>
         <Text className="text-on-surface-variant text-[12px] font-semibold tracking-[0.12em] uppercase mt-2">
-          {post.uNm ? `Trainer ${post.uNm}` : "Openwhyd"}
+          {track.artist?.name ? `Artist ${track.artist.name}` : "Deezer"}
         </Text>
 
         <View className="mt-8 bg-surface-container-low border border-surface-container-high rounded-2xl p-4">
@@ -195,7 +196,7 @@ export default function AudioPlayerScreen() {
 
           {!audioUrl && (
             <Text className="text-on-surface-variant text-[12px] text-center mt-6">
-              This track source isn’t directly playable (e.g. YouTube). Try another one.
+              No preview available for this track on Deezer. Try another one.
             </Text>
           )}
         </View>
