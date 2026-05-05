@@ -4,7 +4,6 @@
 
 @import "nativewind/theme";
 
-
 /* Space Grotesk (bundled in assets/Fonts) — used on web; native loads via expo-font in app/_layout */
 @font-face {
   font-family: "SpaceGrotesk-Light";
