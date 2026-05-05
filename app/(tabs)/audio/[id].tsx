@@ -133,7 +133,7 @@ export default function AudioPlayerScreen() {
                 undefined,
             }}
             contentFit="cover"
-            style={{ width: "100%", height: 280 }}
+            style={{ width: "100%", height: 300 }}
           />
         </View>
 

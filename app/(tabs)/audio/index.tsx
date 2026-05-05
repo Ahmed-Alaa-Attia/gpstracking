@@ -15,6 +15,14 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+type CategoryId = "rap" | "classic" | "shaaby";
+const CATEGORIES: Array<{ id: CategoryId; label: string; query: string }> = [
+  { id: "rap", label: "RAP", query: "marwan pablo" },
+  { id: "classic", label: "CLASSIC", query: "amr diab" },
+  { id: "shaaby", label: "SHAABY", query: "shaabi egypt" },
+];
+
+
 function TrackRow({ item }: { item: DeezerTrack }) {
   const playable = Boolean(item.preview);
   return (
@@ -56,7 +64,12 @@ export default function AudioListScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const query = "amr diab";
+  const [category, setCategory] = useState<CategoryId>("classic");
+  const query = useMemo(
+    () => CATEGORIES.find((c) => c.id === category)?.query ?? "amr diab",
+    [category]
+  );
+
 
   const load = useCallback(async (isManual = false) => {
     isManual ? setRefreshing(true) : setLoading(true);
@@ -75,6 +88,38 @@ export default function AudioListScreen() {
     load(false);
   }, [load]);
 
+  const CategoryBar = useMemo(
+    () => (
+      <View className="flex-row gap-2 mb-4">
+        {CATEGORIES.map((c) => {
+          const active = c.id === category;
+          return (
+            <Pressable
+              key={c.id}
+              onPress={() => setCategory(c.id)}
+              className={[
+                "px-3 py-2 rounded-xl border active:opacity-85",
+                active
+                  ? "bg-primary border-primary"
+                  : "bg-surface-container-low border-surface-container-high",
+              ].join(" ")}
+            >
+              <Text
+                className={[
+                  "text-[11px] font-bold tracking-[0.12em] uppercase",
+                  active ? "text-on-primary" : "text-on-surface",
+                ].join(" ")}
+              >
+                {c.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    ),
+    [category]
+  );
+
   const keyExtractor = useCallback((t: DeezerTrack) => String(t.id), []);
   const renderItem = useCallback(
     ({ item }: { item: DeezerTrack }) => <TrackRow item={item} />,
@@ -88,11 +133,15 @@ export default function AudioListScreen() {
           TRAINING TRACKS
         </Text>
         <Text className="text-on-surface-variant text-[12px] font-semibold tracking-[0.12em] uppercase mb-4">
-          Deezer search — {query}
+              Deezer Arabic categories
+        </Text>
+        {CategoryBar}
+        <Text className="text-on-surface-variant text-[12px] font-semibold tracking-[0.12em] uppercase mb-2">
+          Results — {query}
         </Text>
       </View>
     ),
-    [query]
+    [CategoryBar, query]
   );
 
   return (

@@ -34,7 +34,7 @@ export default function SignInScreen() {
   return (
     <AuthScreenLayout>
       <Text
-        className="text-left text-primary text-label-md mt-26 mb-1"
+        className="text-left text-primary text-label-md mt-20 mb-1"
         style={{ fontFamily: fontFamily.semibold }}
       >
         Member portal
