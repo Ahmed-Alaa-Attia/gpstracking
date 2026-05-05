@@ -1,8 +1,8 @@
-import { AuthScreenLayout } from "@/components/auth/AuthScreenLayout";
 import {
   AuthSocialDivider,
   LabeledField,
 } from "@/components/auth/AuthFormFields";
+import { AuthScreenLayout } from "@/components/auth/AuthScreenLayout";
 import { AuthSocialButtons } from "@/components/auth/AuthSocialButtons";
 import { fontFamily } from "@/constants/fonts";
 import { colors } from "@/constants/theme";
@@ -64,7 +64,7 @@ export default function SignUpScreen() {
       />
 
       <LabeledField
-        label="Security protocol (password)"
+        label="Password"
         value={password}
         onChangeText={setPassword}
         placeholder="••••••••"
