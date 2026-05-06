@@ -6,12 +6,7 @@ import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function formatTime(seconds: number): string {
@@ -41,7 +36,8 @@ export default function AudioPlayerScreen() {
         const t = await fetchTrack(trackId);
         if (alive) setTrack(t);
       } catch (e) {
-        if (alive) setError(e instanceof Error ? e.message : "Failed to load track");
+        if (alive)
+          setError(e instanceof Error ? e.message : "Failed to load track");
       } finally {
         if (alive) setLoading(false);
       }
@@ -53,7 +49,10 @@ export default function AudioPlayerScreen() {
 
   const audioUrl = useMemo(() => track?.preview ?? null, [track?.preview]);
 
-  const player = useAudioPlayer(audioUrl, { updateInterval: 250, downloadFirst: false });
+  const player = useAudioPlayer(audioUrl, {
+    updateInterval: 250,
+    downloadFirst: false,
+  });
   const status = useAudioPlayerStatus(player);
 
   const canPlay = audioUrl != null && !status.loading;
@@ -62,7 +61,8 @@ export default function AudioPlayerScreen() {
     if (!audioUrl) return;
     if (status.playing) player.pause();
     else {
-      if (status.duration > 0 && status.currentTime >= status.duration) player.seekTo(0);
+      if (status.duration > 0 && status.currentTime >= status.duration)
+        player.seekTo(0);
       player.play();
     }
   }, [audioUrl, player, status.currentTime, status.duration, status.playing]);
@@ -73,7 +73,7 @@ export default function AudioPlayerScreen() {
       const next = Math.max(0, (status.currentTime ?? 0) + deltaSeconds);
       player.seekTo(next);
     },
-    [audioUrl, player, status.currentTime]
+    [audioUrl, player, status.currentTime],
   );
 
   if (loading) {
@@ -96,7 +96,9 @@ export default function AudioPlayerScreen() {
           <FeedHeader />
         </View>
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-on-surface text-lg font-bold mb-2">Couldn’t load track</Text>
+          <Text className="text-on-surface text-lg font-bold mb-2">
+            Couldn’t load track
+          </Text>
           <Text className="text-on-surface-variant text-sm text-center">
             {error ?? "Unknown error"}
           </Text>
@@ -104,7 +106,9 @@ export default function AudioPlayerScreen() {
             onPress={() => router.back()}
             className="mt-6 px-5 py-3 rounded-xl bg-surface-container-high active:opacity-85"
           >
-            <Text className="text-on-surface font-bold tracking-[0.1em] uppercase">Back</Text>
+            <Text className="text-on-surface font-bold tracking-[0.1em] uppercase">
+              Back
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -137,7 +141,10 @@ export default function AudioPlayerScreen() {
           />
         </View>
 
-        <Text className="text-on-surface text-3xl font-extrabold tracking-[0.5px] mt-6" numberOfLines={2}>
+        <Text
+          className="text-on-surface text-3xl font-extrabold tracking-[0.5px] mt-6"
+          numberOfLines={2}
+        >
           {track.title || "Untitled"}
         </Text>
         <Text className="text-on-surface-variant text-[12px] font-semibold tracking-[0.12em] uppercase mt-2">
@@ -155,7 +162,10 @@ export default function AudioPlayerScreen() {
           </View>
 
           <View className="h-[6px] rounded-full bg-surface-container-high overflow-hidden">
-            <View style={{ width: `${progress * 100}%` }} className="h-full bg-primary" />
+            <View
+              style={{ width: `${progress * 100}%` }}
+              className="h-full bg-primary"
+            />
           </View>
 
           <View className="flex-row items-center justify-center gap-10 mt-7">
@@ -190,7 +200,11 @@ export default function AudioPlayerScreen() {
               disabled={!canPlay}
               className="w-14 h-14 items-center justify-center rounded-full bg-surface-container-high active:opacity-85 disabled:opacity-40"
             >
-              <Ionicons name="play-forward" size={24} color={colors.onSurface} />
+              <Ionicons
+                name="play-forward"
+                size={24}
+                color={colors.onSurface}
+              />
             </Pressable>
           </View>
 
@@ -204,4 +218,3 @@ export default function AudioPlayerScreen() {
     </View>
   );
 }
-
