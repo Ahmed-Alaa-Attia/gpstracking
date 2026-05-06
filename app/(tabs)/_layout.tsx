@@ -3,7 +3,7 @@ import { colors } from "@/constants/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs, useRouter } from "expo-router";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TabIconProps = {
@@ -17,7 +17,7 @@ function TabIcon({ name, color }: TabIconProps) {
 
 type FabButtonProps = {
   onPress?: () => void;
-  style?: object;
+  style?: StyleProp<ViewStyle>;
 };
 
 // Stable icon functions — defined at module level so identity never changes

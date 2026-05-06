@@ -55,7 +55,7 @@ export default function AudioPlayerScreen() {
   });
   const status = useAudioPlayerStatus(player);
 
-  const canPlay = audioUrl != null && !status.loading;
+  const canPlay = audioUrl != null && (status as any).isLoaded !== false;
 
   const onTogglePlay = useCallback(() => {
     if (!audioUrl) return;

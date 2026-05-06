@@ -20,7 +20,7 @@ function emit(locs: Location.LocationObject[]) {
   });
 }
 
-TaskManager.defineTask(LOCATION_TASK, ({ data, error }) => {
+TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
   if (error) return;
   const payload = data as { locations?: Location.LocationObject[] } | undefined;
   if (payload?.locations?.length) emit(payload.locations);
@@ -36,7 +36,6 @@ export async function startBackgroundLocation() {
         accuracy: Location.Accuracy.BestForNavigation,
         timeInterval: 1000,
         distanceInterval: 0,
-        activityType: Location.ActivityType.Fitness,
       },
       (location) => {
         emit([location]);

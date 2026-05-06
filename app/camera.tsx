@@ -52,7 +52,7 @@ export default function CameraScreen() {
       });
       if (!result.canceled && result.assets.length > 0) {
         const asset = result.assets[0];
-        goToPost(asset.uri, asset.type ?? 'image');
+        goToPost(asset.uri, asset.type === 'video' ? 'video' : 'image');
       }
     } catch (e) {
       console.error('[Camera] openGallery error:', e);
