@@ -1,13 +1,12 @@
-import { fontFamily } from "@/constants/fonts";
 import { colors } from "@/constants/theme";
+import { Image } from 'expo-image';
 import React from "react";
 import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
-  Text,
+  StyleSheet
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -39,12 +38,13 @@ export function AuthScreenLayout({ children }: Props) {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          <Text
-            className="text-center font-bold uppercase tracking-[0.28em] text-primary"
-            style={{ fontFamily: fontFamily.bold, fontSize: 26, letterSpacing: 4 }}
-          >
-            TRACKOOO
-          </Text>
+
+          <Image
+                  source={require('@/assets/trackoo.png')}
+                  contentFit="cover"
+                  style={{ width: 180, height: 70, alignSelf: 'center' }}
+                />
+ 
           {children}
         </ScrollView>
       </KeyboardAvoidingView>
