@@ -6,6 +6,9 @@ export async function getAuthSession(): Promise<boolean> {
   try {
     return (await AsyncStorage.getItem(KEY)) === "1";
   } catch {
+
+
+    
     return false;
   }
 }

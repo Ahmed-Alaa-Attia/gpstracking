@@ -4,7 +4,7 @@ import React, { memo, useCallback, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const PHOTO_HEIGHT = Math.round(SCREEN_WIDTH * (4 / 3)); // 3:4 aspect ratio
+const PHOTO_HEIGHT = Math.round(SCREEN_WIDTH * (3 / 4)); // 3:4 aspect ratio
 
 type Props = {
   id: string;
