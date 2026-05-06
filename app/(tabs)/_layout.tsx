@@ -1,7 +1,7 @@
 import { fontFamily } from "@/constants/fonts";
 import { colors } from "@/constants/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -51,6 +51,7 @@ function FabButton({ onPress, style }: FabButtonProps) {
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -100,7 +101,9 @@ export default function TabLayout() {
           title: "",
           tabBarLabel: () => null,
           tabBarIcon: () => null,
-          tabBarButton: (props) => <FabButton {...props} />,
+          tabBarButton: (props) => (
+            <FabButton {...props} onPress={() => router.push('/camera' as any)} />
+          ),
         }}
       />
       <Tabs.Screen

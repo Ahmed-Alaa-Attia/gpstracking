@@ -33,9 +33,8 @@ export default function SignInScreen() {
 
   return (
     <AuthScreenLayout>
-      {/* <View className="h-20" /> */}
       <Text
-        className="text-left text-primary text-label-md mt-26 mb-1"
+        className="text-left text-primary text-label-md mt-20 mb-1"
         style={{ fontFamily: fontFamily.semibold }}
       >
         Member portal
@@ -46,7 +45,6 @@ export default function SignInScreen() {
       >
         Welcome{"\n"}back
       </Text>
-      {/* <View className="h-4" /> */}
       <LabeledField
         label="Email address"
         value={email}
